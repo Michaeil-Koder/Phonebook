@@ -66,7 +66,7 @@ namespace Phonebook.Presentation.Controllers.Role
 
 
         [HttpGet]
-        [ProducesResponseType(typeof(BaseCommandResponse), 201)]
+        [ProducesResponseType(typeof(BaseCommandResponse), 200)]
         [ProducesResponseType(typeof(BaseCommandResponse), 400)]
         [ProducesResponseType(typeof(BaseCommandResponse), 401)]
         [ProducesResponseType(typeof(BaseCommandResponse), 403)]

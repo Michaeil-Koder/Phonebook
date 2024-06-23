@@ -10,5 +10,6 @@ namespace Phonebook.Application.IRepository
     public interface IUserRoleRepository : IGenericRepository<UserRole>
     {
         Task<bool> IsAdmin(Guid userId);
+        Task<bool> ExistUserRoleByUserId_RoleId(Guid userId,Guid roleId);
     }
 }

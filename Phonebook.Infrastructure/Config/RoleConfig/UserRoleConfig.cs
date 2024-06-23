@@ -14,8 +14,8 @@ namespace Phonebook.Infrastructure.Config.RoleConfig
     {
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
-            builder
-                .HasKey(ur => new { ur.Id, ur.UserId, ur.RoleId });
+            //builder
+            //    .HasKey(ur => new { ur.Id, ur.UserId, ur.RoleId });
 
             builder
                 .HasOne(ur => ur.User)

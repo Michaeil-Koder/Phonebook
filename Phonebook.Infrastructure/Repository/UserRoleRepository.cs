@@ -19,6 +19,11 @@ namespace Phonebook.Infrastructure.Repository
             _dbContext = dbContext;
         }
 
+        public async Task<bool> ExistUserRoleByUserId_RoleId(Guid userId, Guid roleId)
+        {
+            return await _dbContext.UserRoles.Where(ur=>ur.UserId==userId&& ur.RoleId==roleId).AnyAsync();
+        }
+
         public async Task<bool> IsAdmin(Guid userId)
         {
             return await _dbContext.UserRoles.Where(ur=>ur.UserId == userId && ur.Roles.Role=="ادمین").AnyAsync();
