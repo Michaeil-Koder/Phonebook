@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Phonebook.Application.Authentication.Commands.CreateUser;
 using Phonebook.Application.DTOs;
+using Phonebook.Application.DTOs.Role;
 using Phonebook.Application.Role.Commands.AddRole;
 using Phonebook.Application.Role.Commands.EditRole;
+using Phonebook.Application.Role.Queries.GetAllRole;
 using Phonebook.Application.userNumber.Commands.CreateUserNumbers;
 using Phonebook.Domain.Entities;
 using System;
@@ -22,6 +24,7 @@ namespace Phonebook.Application.ConfigAutoMap
             CreateMap<GenericUserNumbersDto,UserNumbers>().ReverseMap();
             CreateMap<CreateRoleCommand,Roles>().ReverseMap();
             CreateMap<EditRoleCommand, Roles>().ReverseMap();
+            CreateMap<GetAllRoleDto, Roles>().ReverseMap();
             
         }
     }

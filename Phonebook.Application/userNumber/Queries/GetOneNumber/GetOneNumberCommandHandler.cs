@@ -54,7 +54,7 @@ namespace Phonebook.Application.userNumber.Queries.GetOneNumber
             response.Success = true;
             response.Message = "شماره تلفن یافت شد";
             response.Body = new Dictionary<string, string>();
-            response.Body.Add(resultNumber.Title, resultNumber.Phone);
+            ((Dictionary<string, string>)response.Body).Add(resultNumber.Title, resultNumber.Phone);
             return response;
         }
     }

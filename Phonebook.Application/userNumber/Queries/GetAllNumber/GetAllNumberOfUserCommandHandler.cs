@@ -46,7 +46,7 @@ namespace Phonebook.Application.userNumber.Queries.GetAllNumber
             response.Body = new Dictionary<string, string>();
             foreach (var userNumber in UserNumberList)
             {
-                response.Body.Add(userNumber.Title,userNumber.Phone);
+                ((Dictionary<string, string>)response.Body).Add(userNumber.Title,userNumber.Phone);
             }
             return response;
         }
