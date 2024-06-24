@@ -35,7 +35,7 @@ namespace Phonebook.Application.Role.Commands.EditRole
         public async Task<BaseCommandResponse> Handle(EditRoleCommand request, CancellationToken cancellationToken)
         {
             #region Check Token For Auth
-            var resultCheckToken = _check.Check();
+            var resultCheckToken = await _check.Check();
             if (!resultCheckToken.Success)
             {
                 return resultCheckToken;
@@ -57,8 +57,8 @@ namespace Phonebook.Application.Role.Commands.EditRole
             #endregion
 
             var ExistUser=await _user.Exist(resultCheckToken.Id.GetValueOrDefault());
-            //var isAdmin=await _userRole.IsAdmin(resultCheckToken.Id.GetValueOrDefault());
-            if(!ExistUser /*||!isAdmin*/)
+            var isAdmin=await _userRole.IsAdmin(resultCheckToken.Id.GetValueOrDefault());
+            if(!ExistUser ||!isAdmin)
             {
                 response.Status = 403;
                 response.Success=false;

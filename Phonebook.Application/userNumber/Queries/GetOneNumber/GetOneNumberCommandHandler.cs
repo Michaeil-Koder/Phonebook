@@ -26,7 +26,7 @@ namespace Phonebook.Application.userNumber.Queries.GetOneNumber
 
         public async Task<BaseCommandResponse> Handle(GetOneNumberCommand request, CancellationToken cancellationToken)
         {
-            var resultCheckToken =_check.Check();
+            var resultCheckToken = await _check.Check();
             if (!resultCheckToken.Success) return resultCheckToken;
 
             var response = new BaseCommandResponse();

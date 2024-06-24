@@ -9,6 +9,6 @@ namespace Phonebook.Application.Identity.CheckToken
 {
     public interface IChekSign_ExpToken
     {
-        public BaseCommandResponse Check();
+        public Task<BaseCommandResponse> Check();
     }
 }

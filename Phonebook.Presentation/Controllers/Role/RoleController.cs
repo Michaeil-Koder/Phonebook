@@ -8,23 +8,14 @@ using Phonebook.Application.Role.Queries.GetAllRole;
 namespace Phonebook.Presentation.Controllers.Role
 {
     [Route("role")]
-    public class RoleController : Controller
+    public class RoleController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public RoleController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
 
         [HttpPost("add")]
-        [ProducesResponseType(typeof(BaseCommandResponse),201)]
-        [ProducesResponseType(typeof(BaseCommandResponse),400)]
-        [ProducesResponseType(typeof(BaseCommandResponse),401)]
-        [ProducesResponseType(typeof(BaseCommandResponse),403)]
+     
         public async Task<ActionResult<BaseCommandResponse>> AddRoleHandler([FromBody] CreateRoleCommand role)
         {
-            var result = await _mediator.Send(role);
+            var result = await Mediator.Send(role);
             if (result.Status == 403)
             {
                 return StatusCode(403,result);
@@ -41,14 +32,11 @@ namespace Phonebook.Presentation.Controllers.Role
 
 
         [HttpPut("update/{id:guid}")]
-        [ProducesResponseType(typeof(BaseCommandResponse), 201)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 401)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 403)]
+        
         public async Task<ActionResult<BaseCommandResponse>> UpdateRoleHandler([FromBody] string role, [FromRoute] Guid id)
         {
 
-            var result = await _mediator.Send(new EditRoleCommand() { RoleId=id,RoleName=role});
+            var result = await Mediator.Send(new EditRoleCommand() { RoleId=id,RoleName=role});
             if (result.Status == 403)
             {
                 return StatusCode(403, result);
@@ -66,14 +54,11 @@ namespace Phonebook.Presentation.Controllers.Role
 
 
         [HttpGet]
-        [ProducesResponseType(typeof(BaseCommandResponse), 200)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 401)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 403)]
+        
         public async Task<ActionResult<BaseCommandResponse>> GetAllRole()
         {
 
-            var result = await _mediator.Send(new GetAllRoleCommand());
+            var result = await Mediator.Send(new GetAllRoleCommand());
             if (result.Status == 403)
             {
                 return StatusCode(403, result);

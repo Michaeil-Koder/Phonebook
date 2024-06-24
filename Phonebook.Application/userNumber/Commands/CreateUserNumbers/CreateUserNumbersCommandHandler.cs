@@ -33,7 +33,7 @@ namespace Phonebook.Application.userNumber.Commands.CreateUserNumbers
         {
             try
             {
-                var result = _chek.Check();
+                var result = await _chek.Check();
                 if (result.Success == false)
                 {
                     return result;

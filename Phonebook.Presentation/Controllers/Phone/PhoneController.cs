@@ -7,30 +7,20 @@ using Phonebook.Application.userNumber.Commands.UpdateNumbers;
 using Phonebook.Application.userNumber.Queries.GetAllNumber;
 using Phonebook.Application.userNumber.Queries.GetOneNumber;
 
-namespace Phonebook.Presentation.Controllers.InsertPhone
+namespace Phonebook.Presentation.Controllers.Phone
 {
     [Route("phone")]
-    public class PhoneController : Controller
+    public class PhoneController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<PhoneController> _logger;
-
-        public PhoneController(IMediator mediator, ILogger<PhoneController> logger)
-        {
-            _mediator = mediator;
-            _logger = logger;
-        }
 
         [HttpPost("add")]
-        [ProducesResponseType(typeof(BaseCommandResponse), 201)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 401)]
+        
         public async Task<ActionResult<BaseCommandResponse>> AddPhone([FromBody] CreateUserNumbersCommand phone)
         {
 
             try
             {
-                var result = await _mediator.Send(phone);
+                var result = await Mediator.Send(phone);
                 if (result.Status == 401)
                 {
                     var response = new BaseCommandResponse();
@@ -55,13 +45,9 @@ namespace Phonebook.Presentation.Controllers.InsertPhone
 
 
         [HttpGet]
-        [ProducesResponseType(typeof(BaseCommandResponse), 200)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 401)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 404)]
         public async Task<ActionResult<BaseCommandResponse>> GetAll()
         {
-            var result = await _mediator.Send(new GetAllNumberOfUserCommand());
+            var result = await Mediator.Send(new GetAllNumberOfUserCommand());
             if (result.Status == 404)
             {
                 return NotFound(result);
@@ -74,13 +60,10 @@ namespace Phonebook.Presentation.Controllers.InsertPhone
         }
 
         [HttpGet("{Title}")]
-        [ProducesResponseType(typeof(BaseCommandResponse), 200)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 401)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 404)]
+        
         public async Task<ActionResult<BaseCommandResponse>> GetOneNumber([FromRoute] string Title)
         {
-            var result = await _mediator.Send(new GetOneNumberCommand() { Title=Title});
+            var result = await Mediator.Send(new GetOneNumberCommand() { Title=Title});
             if (result.Status == 404)
             {
                 return NotFound(result);
@@ -93,15 +76,11 @@ namespace Phonebook.Presentation.Controllers.InsertPhone
         }
 
         [HttpPut("update")]
-        [ProducesResponseType(typeof(BaseCommandResponse), 200)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 401)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 404)]
         public async Task<ActionResult<BaseCommandResponse>> UpdateNumberHandler([FromBody] UpdateUserNumbersCommand numbersCommand)
         {
             try
             {
-                var result = await _mediator.Send(numbersCommand);
+                var result = await Mediator.Send(numbersCommand);
                 if (result.Status == 404)
                 {
                     return NotFound(result);
@@ -124,15 +103,12 @@ namespace Phonebook.Presentation.Controllers.InsertPhone
 
 
         [HttpDelete("remove/{Title}")]
-        [ProducesResponseType(typeof(BaseCommandResponse), 200)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 401)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 404)]
+        
         public async Task<ActionResult<BaseCommandResponse>> DeleteNumberHandler([FromRoute] string Title)
         {
             try
             {
-                var result = await _mediator.Send(new DeleteUserNumberCommand() { Title=Title });
+                var result = await Mediator.Send(new DeleteUserNumberCommand() { Title=Title });
                 if (result.Status == 404)
                 {
                     return NotFound(result);

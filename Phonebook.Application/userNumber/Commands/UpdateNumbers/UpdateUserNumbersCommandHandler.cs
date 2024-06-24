@@ -31,7 +31,7 @@ namespace Phonebook.Application.userNumber.Commands.UpdateNumbers
 
         public async Task<BaseCommandResponse> Handle(UpdateUserNumbersCommand request, CancellationToken cancellationToken)
         {
-            var resultCheckToken=_check.Check();
+            var resultCheckToken = await _check.Check();
             if (!resultCheckToken.Success)
             {
                 return resultCheckToken;

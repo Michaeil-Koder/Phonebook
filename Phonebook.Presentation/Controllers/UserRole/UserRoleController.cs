@@ -8,23 +8,13 @@ namespace Phonebook.Presentation.Controllers.UserRole
 {
     [Route("[controller]")]
     [ApiController]
-    public class UserRoleController : ControllerBase
+    public class UserRoleController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public UserRoleController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
 
         [HttpPost("giv_role")]
-        [ProducesResponseType(typeof(BaseCommandResponse),201)]
-        [ProducesResponseType(typeof(BaseCommandResponse),400)]
-        [ProducesResponseType(typeof(BaseCommandResponse),401)]
-        [ProducesResponseType(typeof(BaseCommandResponse),403)]
         public async Task<ActionResult<BaseCommandResponse>> givingRole([FromBody] GivingRoleCommand giving)
         {
-            var result=await _mediator.Send(giving);
+            var result=await Mediator.Send(giving);
             if (result.Status == 401)
             {
                 return StatusCode(401, result);

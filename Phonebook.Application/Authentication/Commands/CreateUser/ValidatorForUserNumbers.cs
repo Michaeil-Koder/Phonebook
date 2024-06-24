@@ -9,14 +9,14 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Phonebook.Application.userNumber.Commands.CreateUserNumbers
+namespace Phonebook.Application.Authentication.Commands.CreateUser
 {
-    public class CreateUserNumbersCommandValidation : AbstractValidator<GenericUserNumbersDto>
+    public class ValidatorForUserNumbers : AbstractValidator<GenericUserNumbersDto>
     {
         private readonly IUserNumbersRepository _userNumbersRepository;
         private readonly IUserRepository _user;
 
-        public CreateUserNumbersCommandValidation(IUserNumbersRepository userNumbersRepository,IUserRepository user)
+        public ValidatorForUserNumbers(IUserNumbersRepository userNumbersRepository, IUserRepository user)
         {
             _userNumbersRepository = userNumbersRepository;
             _user = user;
@@ -36,9 +36,6 @@ namespace Phonebook.Application.userNumber.Commands.CreateUserNumbers
                 {
                     return await ExistTitlePhone(cu.UserId, cu.Title, cu.Phone);
                 }).WithMessage("قبلا این تلفن در سیستم ثبت شده است.");
-
-            RuleFor(cu => cu.UserId)
-                .MustAsync(async (UserId, cancelation) => await ExistUser(UserId)).WithMessage("کاربری در سیستم وجود ندارد.");
         }
 
         private async Task<bool> ExistUser(Guid userId)

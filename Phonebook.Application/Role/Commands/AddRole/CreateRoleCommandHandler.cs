@@ -34,7 +34,7 @@ namespace Phonebook.Application.Role.Commands.AddRole
 
         public async Task<BaseCommandResponse> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
         {
-            var resultCheckToken=_check.Check();
+            var resultCheckToken =await _check.Check();
             if (!resultCheckToken.Success)
             {
                 return resultCheckToken;

@@ -9,20 +9,16 @@ namespace Phonebook.Presentation.Controllers.Authentication
 {
     [Route("auth")]
     //[Authorize]
-    public class AuthController : Controller
+    public class AuthController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
 
-        public AuthController(IMediator mediator , IConfiguration configuration)
+        public AuthController(IConfiguration configuration)
         {
-            _mediator = mediator;
             _configuration = configuration;
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
         public async Task<ActionResult<BaseCommandResponse>> UserRegister([FromBody] CreateUserCommand userCommand)
         {
             if (userCommand == null)
@@ -32,7 +28,7 @@ namespace Phonebook.Presentation.Controllers.Authentication
                 response.Success = false;
                 return BadRequest(response);
             }
-            var result = await _mediator.Send(userCommand);
+            var result = await Mediator.Send(userCommand);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -50,15 +46,11 @@ namespace Phonebook.Presentation.Controllers.Authentication
 
 
         [HttpPost("login")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 400)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(typeof(BaseCommandResponse), 404)]
         public async Task<ActionResult<BaseCommandResponse>> Login([FromBody] LoginUserCommand user)
         {
             try
             {
-                var result = await _mediator.Send(user);
+                var result = await Mediator.Send(user);
                 if (result.Status == 403)
                 {
                     return Forbid(result.Message);

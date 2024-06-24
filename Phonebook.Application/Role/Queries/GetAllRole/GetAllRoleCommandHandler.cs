@@ -28,7 +28,7 @@ namespace Phonebook.Application.Role.Queries.GetAllRole
         public async Task<BaseCommandResponse> Handle(GetAllRoleCommand request, CancellationToken cancellationToken)
         {
             #region Check Token For Auth
-            var resultCheckToken = _check.Check();
+            var resultCheckToken = await _check.Check();
             if (!resultCheckToken.Success)
             {
                 return resultCheckToken;

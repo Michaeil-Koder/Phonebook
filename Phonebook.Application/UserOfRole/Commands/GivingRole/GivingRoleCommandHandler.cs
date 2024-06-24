@@ -21,7 +21,7 @@ namespace Phonebook.Application.UserOfRole.Commands.GivingRole
         private readonly IValidator<GivingRoleCommand> _validator;
         private readonly IMapper _mapper;
 
-        public GivingRoleCommandHandler(IUserRoleRepository userRole,IUserRepository user,IChekSign_ExpToken Check,IValidator<GivingRoleCommand> validator , IMapper mapper)
+        public GivingRoleCommandHandler(IUserRoleRepository userRole, IUserRepository user, IChekSign_ExpToken Check, IValidator<GivingRoleCommand> validator, IMapper mapper)
         {
             _userRole = userRole;
             _user = user;
@@ -33,7 +33,7 @@ namespace Phonebook.Application.UserOfRole.Commands.GivingRole
         public async Task<BaseCommandResponse> Handle(GivingRoleCommand request, CancellationToken cancellationToken)
         {
             #region Check Token For Auth
-            var resultCheckToken = _check.Check();
+            var resultCheckToken = await _check.Check();
             if (!resultCheckToken.Success)
             {
                 return resultCheckToken;
@@ -79,9 +79,9 @@ namespace Phonebook.Application.UserOfRole.Commands.GivingRole
             }
             #endregion
 
-            var newUserRole=_mapper.Map<UserRole>(request);
+            var newUserRole = _mapper.Map<UserRole>(request);
 
-             await _userRole.Create(newUserRole);
+            await _userRole.Create(newUserRole);
             response.Status = 201;
             response.Success = true;
             response.Message = "نقش با موفقیت داده شد";

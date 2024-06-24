@@ -24,7 +24,7 @@ namespace Phonebook.Application.userNumber.Queries.GetAllNumber
 
         public async Task<BaseCommandResponse> Handle(GetAllNumberOfUserCommand request, CancellationToken cancellationToken)
         {
-            var resultCheckToken=_chek.Check();
+            var resultCheckToken = await _chek.Check();
             if (!resultCheckToken.Success)
             {
                 return resultCheckToken;

@@ -4,6 +4,7 @@ using Phonebook.Application.Responses;
 using Jose;
 using System.Text;
 using System.Text.Json;
+using Phonebook.Application.IRepository;
 
 
 namespace Phonebook.Application.Identity.CheckToken
@@ -12,14 +13,16 @@ namespace Phonebook.Application.Identity.CheckToken
     {
         private readonly IHttpContextAccessor _httpContext;
         private readonly IConfiguration _configuration;
+        private readonly IUserRepository _user;
 
-        public ChekSign_ExpToken(IHttpContextAccessor httpContext,IConfiguration configuration)
+        public ChekSign_ExpToken(IHttpContextAccessor httpContext,IConfiguration configuration,IUserRepository user)
         {
             _httpContext = httpContext;
             _configuration = configuration;
+            _user = user;
         }
 
-        public BaseCommandResponse Check()
+        public async Task<BaseCommandResponse> Check()
         {
             var response = new BaseCommandResponse();
             var Token = _httpContext.HttpContext.Request.Cookies["Token"];
@@ -36,6 +39,16 @@ namespace Phonebook.Application.Identity.CheckToken
 
                 var result=Jose.JWT.Verify(Token,Encoding.UTF8.GetBytes(secret));
                 token tokenSerialize=JsonSerializer.Deserialize<token>(result);
+
+
+                var FindUser=await _user.Exist(tokenSerialize.Id);
+                if (!FindUser)
+                {
+                    response.Status = 403;
+                    response.Success = false;
+                    response.Message = "شما به این بخش دسترسی ندارید.";
+                    return response;
+                }
                 if(tokenSerialize.exp<DateTime.UtcNow) 
                 {
                     response.Status = 401;

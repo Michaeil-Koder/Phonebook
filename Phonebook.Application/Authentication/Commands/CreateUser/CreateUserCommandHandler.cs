@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Phonebook.Application.DTOs;
 using Phonebook.Application.Identity.JsonWebToken;
 using Phonebook.Application.Identity.PasswordHasher;
 using Phonebook.Application.IRepository;
@@ -18,15 +19,19 @@ namespace Phonebook.Application.Authentication.Commands.CreateUser
         private readonly IValidator<CreateUserCommand> _validator;
         private readonly IJsonWebToken _jsonWebToken;
         private readonly IMediator _mediator;
+        private readonly IValidator<GenericUserNumbersDto> _validator2;
+        private readonly IUserNumbersRepository _userNumbers;
         private readonly IUserRepository _userRepository;
 
-        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper, IValidator<CreateUserCommand> validator , IJsonWebToken jsonWebToken , IMediator mediator)
+        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper, IValidator<CreateUserCommand> validator , IJsonWebToken jsonWebToken , IMediator mediator , IValidator<GenericUserNumbersDto> validator2,IUserNumbersRepository userNumbers)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _validator = validator;
             _jsonWebToken = jsonWebToken;
             _mediator = mediator;
+            _validator2 = validator2;
+            _userNumbers = userNumbers;
         }
 
         public async Task<BaseCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken = default)
@@ -62,18 +67,35 @@ namespace Phonebook.Application.Authentication.Commands.CreateUser
             #region AddTitlePhones
             if (request.TitlePhone != null)
             {
-                var userNumCommand = new CreateUserNumbersCommand()
+                foreach (var TitlePhone in request.TitlePhone)
                 {
-                    TitlePhone = request.TitlePhone,
-                    //UserId = user.Id,
-                };
 
-                var result= await _mediator.Send(userNumCommand);
-                if (!result.Success)
-                {
-                    return result;
+                    var userNum = new UserNumbers()
+                    {
+                        Phone = TitlePhone.Value,
+                        Title = TitlePhone.Key,
+                        UserId = user.Id,
+                    };
+
+                    var UserDto = _mapper.Map<GenericUserNumbersDto>(userNum);
+
+                    #region Validation
+                    var ValidationResultUserNumbers = await _validator2.ValidateAsync(UserDto);
+                    if (!ValidationResultUserNumbers.IsValid)
+                    {
+                        //throw new ValidationException(ValidationResult.Errors);
+                        response.Success = false;
+                        response.Status = 400;
+                        response.Message = "خطایی رخ داده است.";
+                        response.Errors = ValidationResultUserNumbers.Errors.Select(x => x.ErrorMessage).ToList();
+                        return response;
+                    }
+                    #endregion
+
+                    await _userNumbers.Create(userNum);
+
                 }
-                
+
             }
             #endregion
 

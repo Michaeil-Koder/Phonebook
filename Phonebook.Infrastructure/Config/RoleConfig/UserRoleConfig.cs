@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Phonebook.Infrastructure.Config.RoleConfig
 {
-    internal class UserRoleConfig : IEntityTypeConfiguration<UserRole>
+    public class UserRoleConfig : IEntityTypeConfiguration<UserRole>
     {
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {

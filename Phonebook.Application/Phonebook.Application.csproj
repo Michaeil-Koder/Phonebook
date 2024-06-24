@@ -12,8 +12,7 @@
 
   <ItemGroup>
     <Folder Include="UserOfRole\Queries\" />
-    <Folder Include="User\Commands\" />
-    <Folder Include="User\Queries\" />
+    <Folder Include="Users\Commands\" />
   </ItemGroup>
 
   <ItemGroup>
